@@ -1,6 +1,7 @@
 export type Ogp = {
   title: string
   image: string
+  url: string
 }
 
 export const getOGP = async (text: string): Promise<Ogp> => {
@@ -8,6 +9,7 @@ export const getOGP = async (text: string): Promise<Ogp> => {
   return Array.from(dom.head.children).reduce<{
     title: string
     image: string
+    url: string
   }>(
     (result, element) => {
       const property = element.getAttribute('property')
@@ -19,9 +21,13 @@ export const getOGP = async (text: string): Promise<Ogp> => {
         // image を取得
         result.image = element.getAttribute('content') ?? ''
       }
+      if (property === 'og:url') {
+        // url を取得
+        result.url = element.getAttribute('content') ?? ''
+      }
 
       return result
     },
-    {title: '', image: ''},
+    { title: '', image: '', url: '' },
   )
 }
