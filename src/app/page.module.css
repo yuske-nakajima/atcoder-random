@@ -1,0 +1,17 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  width: 60rem;
+  margin: 0 auto;
+}
+
+/*widthが60rem以下だと100%になるようにする*/
+@media screen and (max-width: 58rem) {
+  .main {
+    margin: 0;
+    width: 90%;
+  }
+}
