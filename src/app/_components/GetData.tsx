@@ -9,7 +9,7 @@ import {
   sleep,
   SliderIndex,
   sliderIndex,
-  SliderValue
+  SliderValue,
 } from '@/lib/util'
 import { ChangeEvent, useState } from 'react'
 
@@ -105,7 +105,7 @@ export const GetData = () => {
       </div>
       {isLoading && <p>取得中...</p>}
       {data.map((item) => (
-        <DataItem title={item.title} image={item.image} url={item.url} />
+        <DataItem key={item.url} title={item.title} image={item.image} url={item.url} />
       ))}
     </div>
   )
