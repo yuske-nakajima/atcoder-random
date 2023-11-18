@@ -17,7 +17,7 @@ export const GetData = () => {
   const [data, setData] = useState<Ogp[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [sliderValue, setSliderValue] = useState<SliderValue>({
-    a: 50,
+    a: 5,
     b: 0,
     c: 0,
     d: 0,
@@ -79,7 +79,7 @@ export const GetData = () => {
         <input
           type='range'
           min={0}
-          max={100}
+          max={10}
           step={1}
           value={sliderValue[index]}
           onChange={handleSliderChange(index)}
