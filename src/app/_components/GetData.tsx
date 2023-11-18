@@ -1,6 +1,8 @@
 'use client'
+import DataItem from '@/app/_components/DataItem'
+import styles from '@/app/_components/GetData.module.css'
 import { getOGP, Ogp } from '@/lib/getOgp'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 
 const getRandomNumber = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -14,12 +16,19 @@ const getRandomChar = (chars: string) => {
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const GetData = () => {
-  const [data, setData] = useState<Ogp[]>()
+  const [data, setData] = useState<Ogp[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const handle = async () => {
+    if (isLoading) {
+      alert('通信中です...')
+      return
+    }
+    setIsLoading(true)
+
     setData([])
     const arr: Ogp[] = []
 
-    for (let _ = 0; _ < 5; _++) {
+    for (let _ = 0; _ < 6; _++) {
       while (true) {
         await sleep(500)
         const number = getRandomNumber(1, 400)
@@ -45,13 +54,25 @@ export const GetData = () => {
     }
 
     setData(arr)
+    setIsLoading(false)
   }
+
+  const [sliderValue, setSliderValue] = useState(50)
+
+  const handleSliderChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSliderValue(Number(event.target.value))
+  }
+
   return (
-    <div>
-      <button onClick={handle}>Click</button>
-      <code>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      </code>
+    <div className={styles.box}>
+      <div className={styles.buttonArea}>
+        <button className={styles.button} onClick={handle}>
+          {data.length >= 1 ? '再' : ''}表示
+        </button>
+      </div>
+      {data.map((item) => (
+        <DataItem title={item.title} image={item.image} url={item.url} />
+      ))}
     </div>
   )
 }
