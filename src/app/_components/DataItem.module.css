@@ -1,0 +1,42 @@
+.ogpLink {
+  display: flex;
+  border: 5px solid black;
+  background-color: #f5f5f5;
+  text-decoration: none;
+  color: black;
+  /*上下中央*/
+  align-items: center;
+  overflow: scroll;
+  /*スクロールバー非表示（IE・Edge）*/
+  -ms-overflow-style: none;
+  /*スクロールバー非表示（Firefox）*/
+  scrollbar-width: none;
+}
+
+/*スクロールバー非表示（Chrome・Safari）*/
+.ogpLink::-webkit-scrollbar {
+  display: none;
+}
+
+.ogpImage {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  margin-right: 16px;
+}
+
+.ogpInfo {
+  flex: 1;
+  flex-direction: column;
+}
+
+.ogpTitle {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.ogpUrl {
+  font-size: 0.7rem;
+  color: #666;
+  margin: 0;
+}
