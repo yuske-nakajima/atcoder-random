@@ -29,6 +29,15 @@ export type SliderValue = {
   [key: string]: number
 }
 
+export const SliderValueInit: SliderValue = {
+  a: 5,
+  b: 0,
+  c: 0,
+  d: 0,
+  e: 0,
+  f: 0,
+}
+
 export const convertSliderValueStr = (sliderValue: SliderValue): string => {
   let text = ''
   for (const key in sliderValue) {

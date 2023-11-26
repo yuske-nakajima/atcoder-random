@@ -12,9 +12,11 @@ import {
   SliderIndex,
   sliderIndex,
   SliderValue,
+  SliderValueInit,
 } from '@/lib/util'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
+import rison from 'rison'
 
 export const GetData = () => {
   const pathname = usePathname()
@@ -23,18 +25,17 @@ export const GetData = () => {
   const initData: Ogp[] = risonDecode(searchParams.get('data'))
   const [data, setData] = useState<Ogp[]>(initData || [])
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [sliderValue, setSliderValue] = useState<SliderValue>({
-    a: 5,
-    b: 0,
-    c: 0,
-    d: 0,
-    e: 0,
-    f: 0,
-  })
+  const urlInitSliderValue = searchParams.get('slider-value')
+  const initSliderValue: SliderValue = urlInitSliderValue
+    ? rison.decode_object(urlInitSliderValue)
+    : SliderValueInit
+  const [sliderValue, setSliderValue] = useState<SliderValue>(initSliderValue)
   const location = typeof window !== 'undefined' ? window.location : undefined
   const [url, setUrl] = useState<string>(
     searchParams.get('data')
-      ? `${location?.origin}${pathname}?data=${searchParams.get('data')}`
+      ? `${location?.origin}${pathname}?data=${searchParams.get(
+          'data',
+        )}&slider-value=${searchParams.get('slider-value')}`
       : '',
   )
 
@@ -77,7 +78,11 @@ export const GetData = () => {
       }
     }
 
-    setUrl(`${location?.origin}${pathname}?data=${risonEncode(arr)}`)
+    setUrl(
+      `${location?.origin}${pathname}?data=${risonEncode(arr)}&slider-value=${rison.encode_object(
+        sliderValue,
+      )}`,
+    )
 
     setData(arr)
     setIsLoading(false)
