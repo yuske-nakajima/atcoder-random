@@ -132,7 +132,7 @@ export const GetData = () => {
         ) : (
           <div className={styles.sideBox}>
             <button className={styles.button} onClick={handle}>
-              {data.length >= 1 ? '再' : ''}表示
+              {data.length >= 1 ? '再' : ''}取得
             </button>
             {url !== '' && (
               <button className={styles.button} onClick={handleShare}>
