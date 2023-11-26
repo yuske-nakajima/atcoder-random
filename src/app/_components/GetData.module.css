@@ -11,6 +11,7 @@
   justify-content: center;
   width: 100%;
 }
+
 .sideBox > * + * {
   margin-left: 1rem;
 }
@@ -27,6 +28,7 @@
   padding: 0.5rem;
   width: 10rem;
   font-size: 1.2rem;
+  font-weight: 800;
 }
 
 .button:hover {
@@ -52,11 +54,13 @@
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
 @media (max-width: 600px) {
   .sliderArea {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media (min-width: 600px) {
   .sliderArea {
     display: grid;
@@ -64,15 +68,13 @@
     grid-gap: 1rem;
   }
 }
+
 .sliderItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid black;
-  background-color: #fff;
-  color: black;
-  padding: 0.5rem;
-  width: 10rem;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  column-gap: 10px;
+}
+
+.sliderItemLabel {
   font-size: 1.2rem;
 }

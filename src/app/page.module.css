@@ -8,6 +8,11 @@
   margin: 0 auto;
 }
 
+.title {
+  font-size: 2rem;
+  font-weight: 900;
+}
+
 /*widthが60rem以下だと100%になるようにする*/
 @media screen and (max-width: 58rem) {
   .main {

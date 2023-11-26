@@ -3,6 +3,7 @@ import DataItem from '@/app/_components/DataItem'
 import styles from '@/app/_components/GetData.module.css'
 import { getOGP, Ogp } from '@/lib/getOgp'
 import {
+  calcSliderFontWeight,
   convertSliderValueStr,
   getRandomChar,
   getRandomNumber,
@@ -107,7 +108,7 @@ export const GetData = () => {
 
   const slider = (index: SliderIndex) => {
     return (
-      <div className={styles.sliderArea} key={index}>
+      <div className={styles.sliderItem} key={index}>
         <input
           type='range'
           min={0}
@@ -116,8 +117,11 @@ export const GetData = () => {
           value={sliderValue[index]}
           onChange={handleSliderChange(index)}
         />
-        <p>
-          {index.toUpperCase()}({sliderValue[index]})
+        <p
+          className={styles.sliderItemLabel}
+          style={{ fontWeight: calcSliderFontWeight(sliderValue[index]) }}
+        >
+          {index.toUpperCase()}
         </p>
       </div>
     )

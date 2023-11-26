@@ -86,3 +86,9 @@ export const risonDecode = (data: string | null): Ogp[] => {
     return rison.decode(item)
   })
 }
+
+export const calcSliderFontWeight = (num: number): number => {
+  if (num >= 9) return 900
+  if (num <= 1) return 100
+  return num * 100
+}
