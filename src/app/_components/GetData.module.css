@@ -6,6 +6,15 @@
   margin-top: 1rem;
 }
 
+.sideBox {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.sideBox > * + * {
+  margin-left: 1rem;
+}
+
 .buttonArea {
   display: flex;
   justify-content: center;

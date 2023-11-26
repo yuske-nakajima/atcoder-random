@@ -6,15 +6,22 @@ import {
   convertSliderValueStr,
   getRandomChar,
   getRandomNumber,
+  risonDecode,
+  risonEncode,
   sleep,
   SliderIndex,
   sliderIndex,
   SliderValue,
 } from '@/lib/util'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 
 export const GetData = () => {
-  const [data, setData] = useState<Ogp[]>([])
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const initData: Ogp[] = risonDecode(searchParams.get('data'))
+  const [data, setData] = useState<Ogp[]>(initData || [])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [sliderValue, setSliderValue] = useState<SliderValue>({
     a: 5,
@@ -24,6 +31,12 @@ export const GetData = () => {
     e: 0,
     f: 0,
   })
+  const location = typeof window !== 'undefined' ? window.location : undefined
+  const [url, setUrl] = useState<string>(
+    searchParams.get('data')
+      ? `${location?.origin}${pathname}?data=${searchParams.get('data')}`
+      : '',
+  )
 
   const handle = async () => {
     if (isLoading) {
@@ -47,6 +60,10 @@ export const GetData = () => {
 
         const text = await data.text()
         const ogp = await getOGP(text)
+
+        // 被ったらやり直し
+        if (arr.some((item) => item.url === ogp.url)) continue
+
         if (
           ogp.title === '' ||
           ogp.title === '404 Not Found - AtCoder' ||
@@ -60,8 +77,16 @@ export const GetData = () => {
       }
     }
 
+    setUrl(`${location?.origin}${pathname}?data=${risonEncode(arr)}`)
+
     setData(arr)
     setIsLoading(false)
+  }
+
+  const handleShare = async () => {
+    // urlをクリップボードにコピーする
+    await navigator.clipboard.writeText(url)
+    alert('共有用URLをコピーしました')
   }
 
   const handleSliderChange = (index: string) => {
@@ -98,9 +123,16 @@ export const GetData = () => {
         {isLoading ? (
           <></>
         ) : (
-          <button className={styles.button} onClick={handle}>
-            {data.length >= 1 ? '再' : ''}表示
-          </button>
+          <div className={styles.sideBox}>
+            <button className={styles.button} onClick={handle}>
+              {data.length >= 1 ? '再' : ''}表示
+            </button>
+            {url !== '' && (
+              <button className={styles.button} onClick={handleShare}>
+                共有
+              </button>
+            )}
+          </div>
         )}
       </div>
       {isLoading && <p>取得中...</p>}
