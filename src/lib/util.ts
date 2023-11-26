@@ -2,9 +2,19 @@ export const getRandomNumber = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export const getRandomChar = (chars: string) => {
-  const randomIndex = Math.floor(Math.random() * chars.length)
-  return chars.charAt(randomIndex)
+export const getRandomChar = (chars: string): string => {
+  const charArr: string[] = chars.split('')
+
+  for (let _ = 0; _ < 10; _++) {
+    for (let j = charArr.length - 1; j > 0; j--) {
+      const randomIndex: number = Math.floor(Math.random() * (j + 1))
+      const tmp: string = charArr[j]
+      charArr[j] = charArr[randomIndex]
+      charArr[randomIndex] = tmp
+    }
+  }
+
+  return charArr[Math.floor(Math.random() * charArr.length)]
 }
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
