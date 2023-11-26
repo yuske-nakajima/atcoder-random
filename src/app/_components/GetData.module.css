@@ -29,6 +29,9 @@
   width: 10rem;
   font-size: 1.2rem;
   font-weight: 800;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button:hover {
@@ -42,6 +45,11 @@
 
 .button:active {
   transform: translateY(3px);
+}
+
+.buttonIcon {
+  margin-left: 0.5rem;
+  padding-top: 0.5rem;
 }
 
 /*
@@ -77,4 +85,11 @@
 
 .sliderItemLabel {
   font-size: 1.2rem;
+}
+
+.getLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
 }

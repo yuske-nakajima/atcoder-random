@@ -87,8 +87,16 @@ export const risonDecode = (data: string | null): Ogp[] => {
   })
 }
 
-export const calcSliderFontWeight = (num: number): number => {
+export const calcFontWeight = (num: number): number => {
   if (num >= 9) return 900
   if (num <= 1) return 100
   return num * 100
+}
+
+export const calcFontSize = (num: number): number => {
+  return ((num % 10) / 3) * 1.99
+}
+
+export const getLocation = (): Location | undefined => {
+  return typeof window !== 'undefined' ? window.location : undefined
 }

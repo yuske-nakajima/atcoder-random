@@ -5,7 +5,7 @@ import { FC } from 'react'
 const Home: FC = () => {
   return (
     <main className={styles.main}>
-      <h1 className={styles.title}>Atcoder 問題ランダム取得</h1>
+      <h1 className={styles.title}>Atcoder Random</h1>
       <GetData />
     </main>
   )
