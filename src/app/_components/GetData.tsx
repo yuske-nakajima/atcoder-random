@@ -40,10 +40,12 @@ export const GetData = () => {
   )
 
   const handle = async () => {
-    if (isLoading) {
-      alert('通信中です...')
-      return
-    }
+    // A-Fのパラメータが空だったら処理を中断する
+    const convertSliderValueString = convertSliderValueStr(sliderValue)
+    if (convertSliderValueString === '') return alert('条件を指定してください')
+
+    // 取得中の場合は処理を中断する
+    if (isLoading) return alert('通信中です...')
     setIsLoading(true)
 
     setData([])
@@ -54,7 +56,7 @@ export const GetData = () => {
         await sleep(500)
         const number = getRandomNumber(1, 400)
         // kindには外から指定できるようにする
-        const kind = getRandomChar('a' + convertSliderValueStr(sliderValue))
+        const kind = getRandomChar(convertSliderValueString)
 
         const data = await fetch(`/api/proxy/${number}/${kind}`)
         if (data.status !== 200) continue
