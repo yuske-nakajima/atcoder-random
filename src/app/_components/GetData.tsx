@@ -6,9 +6,9 @@ import {
   calcFontSize,
   calcFontWeight,
   convertSliderValueStr,
+  getAbcContestNumber,
   getLocation,
   getRandomChar,
-  getRandomNumber,
   risonDecode,
   risonEncode,
   sleep,
@@ -77,7 +77,7 @@ export const GetData = () => {
     for (let _ = 0; _ < 6; _++) {
       while (true) {
         await sleep(500)
-        const number = getRandomNumber(1, 400)
+        const number = getAbcContestNumber()
         // kindには外から指定できるようにする
         const kind = getRandomChar(convertSliderValueString)
 
