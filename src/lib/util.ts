@@ -2,6 +2,17 @@ import { ABC_CONTEST_BASE_YEAR, ABC_CONTEST_NUMBER } from '@/lib/constans'
 import { Ogp } from '@/lib/getOgp'
 import rison from 'rison'
 
+/**
+ * 今日の日付を取得します。
+ * @param now
+ */
+const yearDay = (now: Date): number => {
+  const start = new Date(now.getFullYear(), 0, 0)
+  const diff = now.getTime() - start.getTime()
+  const oneDay = 1000 * 60 * 60 * 24
+  return Math.floor(diff / oneDay)
+}
+
 export const getAbcContestNumber = () => {
   const min = 1
 
@@ -20,13 +31,10 @@ export const getAbcContestNumber = () => {
   return Math.floor(Math.random() * (max + ABC_CONTEST_NUMBER + extraWeeks - min + 1)) + min
 }
 
-const yearDay = (now: Date): number => {
-  const start = new Date(now.getFullYear(), 0, 0)
-  const diff = now.getTime() - start.getTime()
-  const oneDay = 1000 * 60 * 60 * 24
-  return Math.floor(diff / oneDay)
-}
-
+/**
+ * ランダムな文字列を取得します。
+ * @param chars
+ */
 export const getRandomChar = (chars: string): string => {
   const charArr: string[] = chars.split('')
 
@@ -42,6 +50,10 @@ export const getRandomChar = (chars: string): string => {
   return charArr[Math.floor(Math.random() * charArr.length)]
 }
 
+/**
+ * 指定ミリ秒をスリープします
+ * @param ms
+ */
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const sliderIndex = ['a', 'b', 'c', 'd', 'e', 'f'] as const
@@ -71,6 +83,18 @@ export const convertSliderValueStr = (sliderValue: SliderValue): string => {
 }
 
 /**
+ * unicode文字列をバイナリ形式にエンコードします。
+ *
+ * @param {string} unicodeString - エンコードするunicode文字列。
+ * @returns {string} エンコードされたバイナリ文字列。
+ */
+const binaryString = (unicodeString: string): string => {
+  return encodeURIComponent(unicodeString).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+    return String.fromCharCode(Number('0x' + p1))
+  })
+}
+
+/**
  * Ogp 配列を rison 形式にエンコードする関数
  * @param {Ogp[]} data - エンコードする Ogp オブジェクトの配列
  * @returns {string} - エンコードされた文字列（base64 エンコード済み）
@@ -78,11 +102,35 @@ export const convertSliderValueStr = (sliderValue: SliderValue): string => {
 export const risonEncode = (data: Ogp[]): string => {
   // base64 encode して返す
   return btoa(
-    // 配列を rison 形式にencode
-    rison.encode_array(
-      // 各 Ogp オブジェクトを rison 形式に encode
-      data.map((item) => rison.encode(item)),
+    binaryString(
+      rison.encode_array(
+        data.map((item) => {
+          return rison.encode(item)
+        }),
+      ),
     ),
+  )
+}
+
+/**
+ * バイナリ文字列をUnicode文字列に変換します。
+ *
+ * @param {string} binaryString - Unicodeに変換するためのバイナリ文字列。
+ * @returns {string} - Unicode文字列。
+ */
+const unicodeString = (binaryString: string): string => {
+  console.log(
+    'binaryString: ',
+    decodeURIComponent(
+      binaryString.replace(/[^\x20-\x7E]/g, (match) => {
+        return encodeURIComponent(match).replace(/%/g, '')
+      }),
+    ),
+  )
+  return decodeURIComponent(
+    binaryString.replace(/[^\x20-\x7E]/g, (match) => {
+      return encodeURIComponent(match).replace(/%/g, '')
+    }),
   )
 }
 
@@ -98,7 +146,7 @@ export const risonDecode = (data: string | null): Ogp[] => {
   // base64 デコードして rison 形式の配列を取得
   let decodeArr: string[] = []
   try {
-    decodeArr = rison.decode_array(atob(data))
+    decodeArr = rison.decode_array(unicodeString(atob(data)))
   } catch (e) {
     console.error(e)
   }
