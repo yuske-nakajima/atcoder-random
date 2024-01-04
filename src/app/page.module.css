@@ -9,8 +9,10 @@
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 900;
+  color: var(--main-color);
+  text-decoration: none;
 }
 
 /*widthが60rem以下だと100%になるようにする*/
@@ -18,5 +20,9 @@
   .main {
     margin: 0;
     width: 90%;
+  }
+
+  .title {
+    font-size: 1.2rem;
   }
 }
