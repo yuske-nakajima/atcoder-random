@@ -1,8 +1,30 @@
+import { ABC_CONTEST_BASE_YEAR, ABC_CONTEST_NUMBER } from '@/lib/constans'
 import { Ogp } from '@/lib/getOgp'
 import rison from 'rison'
 
-export const getRandomNumber = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min
+export const getAbcContestNumber = () => {
+  const min = 1
+
+  // 今日の日付を取得
+  const today = new Date()
+
+  // 2023年以降の経過日数
+  const baseYearDiffDay = (today.getFullYear() - ABC_CONTEST_BASE_YEAR) * 365 + yearDay(today)
+
+  // 2023年以降の経過週数
+  const max = Math.floor(baseYearDiffDay / 7)
+
+  // 2023年以降の経過週数に5週間を加算
+  const extraWeeks = 5
+
+  return Math.floor(Math.random() * (max + ABC_CONTEST_NUMBER + extraWeeks - min + 1)) + min
+}
+
+const yearDay = (now: Date): number => {
+  const start = new Date(now.getFullYear(), 0, 0)
+  const diff = now.getTime() - start.getTime()
+  const oneDay = 1000 * 60 * 60 * 24
+  return Math.floor(diff / oneDay)
 }
 
 export const getRandomChar = (chars: string): string => {
