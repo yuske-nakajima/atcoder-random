@@ -1,9 +1,10 @@
 'use client'
 import DataItem from '@/app/_components/DataItem'
 import styles from '@/app/_components/GetData.module.css'
+import { Loading } from '@/app/_components/loading'
+import { FETCH_COUNT } from '@/lib/constans'
 import { getOGP, Ogp } from '@/lib/getOgp'
 import {
-  calcFontSize,
   calcFontWeight,
   convertSliderValueStr,
   getAbcContestNumber,
@@ -30,7 +31,7 @@ export const GetData = () => {
   const initData: Ogp[] = risonDecode(searchParams.get('data'))
   const [data, setData] = useState<Ogp[]>(initData || [])
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [loadingTime, setLoadingTime] = useState<number>(0)
+  // const [loadingTime, setLoadingTime] = useState<number>(0)
   const urlInitSliderValue = searchParams.get('slider-value')
   const initSliderValue: SliderValue = urlInitSliderValue
     ? rison.decode_object(urlInitSliderValue)
@@ -43,23 +44,6 @@ export const GetData = () => {
         )}&slider-value=${searchParams.get('slider-value')}`
       : '',
   )
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | undefined>(undefined)
-
-  const startTimer = () => {
-    setLoadingTime(0)
-    const id = setInterval(() => {
-      setLoadingTime((prev) => prev + 1)
-    }, 100)
-    setIntervalId(id)
-  }
-
-  const clearTimer = () => {
-    if (intervalId) {
-      clearInterval(intervalId)
-      setLoadingTime(0)
-      setIntervalId(undefined)
-    }
-  }
 
   const handle = async () => {
     // A-Fのパラメータが空だったら処理を中断する
@@ -69,12 +53,11 @@ export const GetData = () => {
     // 取得中の場合は処理を中断する
     if (isLoading) return alert('通信中です...')
     setIsLoading(true)
-    startTimer()
 
     setData([])
     const arr: Ogp[] = []
 
-    for (let _ = 0; _ < 6; _++) {
+    for (let _ = 0; _ < FETCH_COUNT; _++) {
       while (true) {
         await sleep(500)
         const number = getAbcContestNumber()
@@ -111,7 +94,6 @@ export const GetData = () => {
 
     setData(arr)
     setIsLoading(false)
-    clearTimer()
   }
 
   const handleShare = async () => {
@@ -175,17 +157,7 @@ export const GetData = () => {
           </div>
         )}
       </div>
-      {isLoading && (
-        <p
-          className={styles.getLabel}
-          style={{
-            fontSize: `${calcFontSize(loadingTime)}rem`,
-            fontWeight: calcFontWeight(loadingTime),
-          }}
-        >
-          取得中...
-        </p>
-      )}
+      {isLoading && <Loading />}
       {data.map((item) => (
         <DataItem key={item.url} title={item.title} image={item.image} url={item.url} />
       ))}
