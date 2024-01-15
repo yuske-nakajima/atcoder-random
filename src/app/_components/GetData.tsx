@@ -1,6 +1,7 @@
 'use client'
 import DataItem from '@/app/_components/DataItem'
 import styles from '@/app/_components/GetData.module.css'
+import { FETCH_COUNT } from '@/lib/constans'
 import { getOGP, Ogp } from '@/lib/getOgp'
 import {
   calcFontSize,
@@ -74,7 +75,7 @@ export const GetData = () => {
     setData([])
     const arr: Ogp[] = []
 
-    for (let _ = 0; _ < 6; _++) {
+    for (let _ = 0; _ < FETCH_COUNT; _++) {
       while (true) {
         await sleep(500)
         const number = getAbcContestNumber()
