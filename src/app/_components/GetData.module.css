@@ -86,10 +86,3 @@
 .sliderItemLabel {
   font-size: 1.2rem;
 }
-
-.getLabel {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60vh;
-}
