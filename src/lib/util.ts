@@ -101,15 +101,20 @@ const binaryString = (unicodeString: string): string => {
  */
 export const risonEncode = (data: Ogp[]): string => {
   // base64 encode して返す
-  return btoa(
-    binaryString(
-      rison.encode_array(
-        data.map((item) => {
-          return rison.encode(item)
-        }),
-      ),
+  const encodedData = binaryString(
+    rison.encode_array(
+      data.map((item) => {
+        return rison.encode(item)
+      }),
     ),
   )
+
+  // ブラウザ環境でのみbtoa使用、サーバーサイドではBuffer使用
+  if (typeof window !== 'undefined') {
+    return btoa(encodedData)
+  } else {
+    return Buffer.from(encodedData, 'binary').toString('base64')
+  }
 }
 
 /**
@@ -146,7 +151,14 @@ export const risonDecode = (data: string | null): Ogp[] => {
   // base64 デコードして rison 形式の配列を取得
   let decodeArr: string[] = []
   try {
-    decodeArr = rison.decode_array(unicodeString(atob(data)))
+    let decodedData: string
+    // ブラウザ環境でのみatob使用、サーバーサイドではBuffer使用
+    if (typeof window !== 'undefined') {
+      decodedData = atob(data)
+    } else {
+      decodedData = Buffer.from(data, 'base64').toString('binary')
+    }
+    decodeArr = rison.decode_array(unicodeString(decodedData))
   } catch (e) {
     console.error(e)
   }
