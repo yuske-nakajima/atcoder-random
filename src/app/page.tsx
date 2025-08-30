@@ -2,7 +2,7 @@ import { GetData } from '@/app/_components/GetData'
 import styles from '@/app/page.module.css'
 import '@/styles/variables.css'
 import Link from 'next/link'
-import { FC } from 'react'
+import { FC, Suspense } from 'react'
 
 const Home: FC = () => {
   return (
@@ -10,7 +10,9 @@ const Home: FC = () => {
       <Link href='/' className={styles.title}>
         <h1>Atcoder Random</h1>
       </Link>
-      <GetData />
+      <Suspense fallback={<div>Loading...</div>}>
+        <GetData />
+      </Suspense>
     </main>
   )
 }

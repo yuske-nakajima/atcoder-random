@@ -1,7 +1,6 @@
 'use client'
 import DataItem from '@/app/_components/DataItem'
 import styles from '@/app/_components/GetData.module.css'
-import { Loading } from '@/app/_components/loading'
 import { FETCH_COUNT } from '@/lib/constans'
 import { getOGP, Ogp } from '@/lib/getOgp'
 import {
@@ -20,9 +19,17 @@ import {
 } from '@/lib/util'
 import { FaShareSquare } from '@react-icons/all-files/fa/FaShareSquare'
 import { MdGetApp } from '@react-icons/all-files/md/MdGetApp'
+import dynamic from 'next/dynamic'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import rison from 'rison'
+
+const Loading = dynamic(
+  () => import('@/app/_components/loading').then((mod) => ({ default: mod.Loading })),
+  {
+    ssr: false,
+  },
+)
 
 export const GetData = () => {
   const pathname = usePathname()
