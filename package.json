@@ -15,7 +15,7 @@
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
     "lottie-react": "^2.4.0",
-    "next": "15.5.2",
+    "next": "15.5.7",
     "react": "^19",
     "react-dom": "^19",
     "rison": "^0.1.1"
