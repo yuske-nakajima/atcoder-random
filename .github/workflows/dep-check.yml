@@ -47,15 +47,20 @@ jobs:
             REPORT="${REPORT}\n📦 Node.js アップデート: v${NODE_CURRENT} → v${LATEST}"
           fi
 
-          # mise.toml のバージョンと実際のバージョンを比較 (engines.node も)
+          # mise.toml は完全一致比較 (厳密 pin)
           MISE_NODE=$(grep '^node' mise.toml | sed 's/.*"\(.*\)".*/\1/')
-          ENGINES_NODE=$(jq -r '.engines.node // ""' package.json)
           ACTUAL_NODE=$(node -v | sed 's/v//')
           if [ "$MISE_NODE" != "$ACTUAL_NODE" ]; then
             REPORT="${REPORT}\n⚠️ Node.js バージョン不一致: mise.toml=${MISE_NODE}, 実際=${ACTUAL_NODE}"
           fi
-          if [ -n "$ENGINES_NODE" ] && [ "$ENGINES_NODE" != "$ACTUAL_NODE" ]; then
-            REPORT="${REPORT}\n⚠️ Node.js バージョン不一致: engines.node=${ENGINES_NODE}, 実際=${ACTUAL_NODE}"
+          # engines.node は Vercel 互換のため major のみ比較 (例: "24.x", "24")
+          ENGINES_NODE=$(jq -r '.engines.node // ""' package.json)
+          if [ -n "$ENGINES_NODE" ]; then
+            ENGINES_NODE_MAJOR=$(echo "$ENGINES_NODE" | grep -oE '[0-9]+' | head -1)
+            ACTUAL_NODE_MAJOR=$(echo "$ACTUAL_NODE" | cut -d. -f1)
+            if [ "$ENGINES_NODE_MAJOR" != "$ACTUAL_NODE_MAJOR" ]; then
+              REPORT="${REPORT}\n⚠️ Node.js メジャーバージョン不一致: engines.node=${ENGINES_NODE}, 実際=${ACTUAL_NODE}"
+            fi
           fi
 
           echo "report<<EOF" >> "$GITHUB_OUTPUT"
