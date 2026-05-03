@@ -1,8 +1,14 @@
-'use client'
-import DataItem from '@/app/_components/DataItem'
-import styles from '@/app/_components/GetData.module.css'
-import { FETCH_COUNT } from '@/lib/constans'
-import { getOGP, Ogp } from '@/lib/getOgp'
+"use client";
+import { FaShareSquare } from "@react-icons/all-files/fa/FaShareSquare";
+import { MdGetApp } from "@react-icons/all-files/md/MdGetApp";
+import dynamic from "next/dynamic";
+import { usePathname, useSearchParams } from "next/navigation";
+import { type ChangeEvent, useState } from "react";
+import rison from "rison";
+import DataItem from "@/app/_components/DataItem";
+import styles from "@/app/_components/GetData.module.css";
+import { FETCH_COUNT } from "@/lib/constans";
+import { getOGP, type Ogp } from "@/lib/getOgp";
 import {
   calcFontWeight,
   convertSliderValueStr,
@@ -11,85 +17,79 @@ import {
   getRandomChar,
   risonDecode,
   risonEncode,
-  sleep,
-  SliderIndex,
-  sliderIndex,
-  SliderValue,
+  type SliderIndex,
+  type SliderValue,
   SliderValueInit,
-} from '@/lib/util'
-import { FaShareSquare } from '@react-icons/all-files/fa/FaShareSquare'
-import { MdGetApp } from '@react-icons/all-files/md/MdGetApp'
-import dynamic from 'next/dynamic'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { ChangeEvent, useState } from 'react'
-import rison from 'rison'
+  sleep,
+  sliderIndex,
+} from "@/lib/util";
 
 const Loading = dynamic(
-  () => import('@/app/_components/loading').then((mod) => ({ default: mod.Loading })),
+  () => import("@/app/_components/loading").then((mod) => ({ default: mod.Loading })),
   {
     ssr: false,
   },
-)
+);
 
 export const GetData = () => {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const initData: Ogp[] = risonDecode(searchParams.get('data'))
-  const [data, setData] = useState<Ogp[]>(initData || [])
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const initData: Ogp[] = risonDecode(searchParams.get("data"));
+  const [data, setData] = useState<Ogp[]>(initData || []);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   // const [loadingTime, setLoadingTime] = useState<number>(0)
-  const urlInitSliderValue = searchParams.get('slider-value')
+  const urlInitSliderValue = searchParams.get("slider-value");
   const initSliderValue: SliderValue = urlInitSliderValue
     ? rison.decode_object(urlInitSliderValue)
-    : SliderValueInit
-  const [sliderValue, setSliderValue] = useState<SliderValue>(initSliderValue)
+    : SliderValueInit;
+  const [sliderValue, setSliderValue] = useState<SliderValue>(initSliderValue);
   const [url, setUrl] = useState<string>(
-    searchParams.get('data')
+    searchParams.get("data")
       ? `${getLocation()?.origin}${pathname}?data=${searchParams.get(
-          'data',
-        )}&slider-value=${searchParams.get('slider-value')}`
-      : '',
-  )
+          "data",
+        )}&slider-value=${searchParams.get("slider-value")}`
+      : "",
+  );
 
   const handle = async () => {
     // A-Fのパラメータが空だったら処理を中断する
-    const convertSliderValueString = convertSliderValueStr(sliderValue)
-    if (convertSliderValueString === '') return alert('条件を指定してください')
+    const convertSliderValueString = convertSliderValueStr(sliderValue);
+    if (convertSliderValueString === "") return alert("条件を指定してください");
 
     // 取得中の場合は処理を中断する
-    if (isLoading) return alert('通信中です...')
-    setIsLoading(true)
+    if (isLoading) return alert("通信中です...");
+    setIsLoading(true);
 
-    setData([])
-    const arr: Ogp[] = []
+    setData([]);
+    const arr: Ogp[] = [];
 
     for (let _ = 0; _ < FETCH_COUNT; _++) {
       while (true) {
-        await sleep(500)
-        const number = getAbcContestNumber()
+        await sleep(500);
+        const number = getAbcContestNumber();
         // kindには外から指定できるようにする
-        const kind = getRandomChar(convertSliderValueString)
+        const kind = getRandomChar(convertSliderValueString);
 
-        const data = await fetch(`/api/proxy/${number}/${kind}`)
-        if (data.status !== 200) continue
+        const data = await fetch(`/api/proxy/${number}/${kind}`);
+        if (data.status !== 200) continue;
 
-        const text = await data.text()
-        const ogp = await getOGP(text)
+        const text = await data.text();
+        const ogp = await getOGP(text);
 
         // 被ったらやり直し
-        if (arr.some((item) => item.url === ogp.url)) continue
+        if (arr.some((item) => item.url === ogp.url)) continue;
 
         if (
-          ogp.title === '' ||
-          ogp.title === '404 Not Found - AtCoder' ||
-          ogp.image === '' ||
-          ogp.url === ''
+          ogp.title === "" ||
+          ogp.title === "404 Not Found - AtCoder" ||
+          ogp.image === "" ||
+          ogp.url === ""
         )
-          continue
+          continue;
 
-        arr.push(ogp)
-        break
+        arr.push(ogp);
+        break;
       }
     }
 
@@ -97,32 +97,32 @@ export const GetData = () => {
       `${getLocation()?.origin}${pathname}?data=${risonEncode(
         arr,
       )}&slider-value=${rison.encode_object(sliderValue)}`,
-    )
+    );
 
-    setData(arr)
-    setIsLoading(false)
-  }
+    setData(arr);
+    setIsLoading(false);
+  };
 
   const handleShare = async () => {
     // urlをクリップボードにコピーする
-    await navigator.clipboard.writeText(url)
-    alert('共有用URLをコピーしました')
-  }
+    await navigator.clipboard.writeText(url);
+    alert("共有用URLをコピーしました");
+  };
 
   const handleSliderChange = (index: string) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
       setSliderValue({
         ...sliderValue,
         [index]: Number(event.target.value),
-      })
-    }
-  }
+      });
+    };
+  };
 
   const slider = (index: SliderIndex) => {
     return (
       <div className={styles.sliderItem} key={index}>
         <input
-          type='range'
+          type="range"
           min={0}
           max={10}
           step={1}
@@ -136,25 +136,23 @@ export const GetData = () => {
           {index.toUpperCase()}
         </p>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className={styles.box}>
       <div className={styles.sliderArea}>{[...sliderIndex].map((index) => slider(index))}</div>
       <div className={styles.buttonArea}>
-        {isLoading ? (
-          <></>
-        ) : (
+        {isLoading ? null : (
           <div className={styles.sideBox}>
-            <button className={styles.button} onClick={handle}>
-              {data.length >= 1 ? '再' : ''}取得
+            <button type="button" className={styles.button} onClick={handle}>
+              {data.length >= 1 ? "再" : ""}取得
               <span className={styles.buttonIcon}>
                 <MdGetApp />
               </span>
             </button>
-            {url !== '' && (
-              <button className={styles.button} onClick={handleShare}>
+            {url !== "" && (
+              <button type="button" className={styles.button} onClick={handleShare}>
                 共有
                 <span className={styles.buttonIcon}>
                   <FaShareSquare />
@@ -169,5 +167,5 @@ export const GetData = () => {
         <DataItem key={item.url} title={item.title} image={item.image} url={item.url} />
       ))}
     </div>
-  )
-}
+  );
+};
