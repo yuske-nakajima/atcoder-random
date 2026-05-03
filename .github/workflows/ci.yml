@@ -26,8 +26,9 @@ jobs:
       - name: typecheck
         run: bun run typecheck
 
-      - name: lint
-        run: bun run lint
+      # biome ci で lint + format + import sort をまとめて検証 (write しない)
+      - name: biome ci
+        run: bun run ci
 
       - name: build
         run: bun run build

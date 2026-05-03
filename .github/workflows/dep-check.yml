@@ -71,11 +71,18 @@ jobs:
           LATEST_BUN=$(curl -sf https://api.github.com/repos/oven-sh/bun/releases/latest | jq -r '.tag_name' | sed 's/^bun-v//')
           ACTUAL_BUN=$(bun -v)
           MISE_BUN=$(grep '^bun' mise.toml | sed 's/.*"\(.*\)".*/\1/')
+          PKG_MANAGER=$(jq -r '.packageManager // ""' package.json | sed 's/^bun@//' | sed 's/+.*//')
+          ENGINES_BUN=$(jq -r '.engines.bun // ""' package.json)
 
           REPORT=""
-          if [ -n "$MISE_BUN" ] && [ "$MISE_BUN" != "$ACTUAL_BUN" ]; then
-            REPORT="${REPORT}\n⚠️ bun バージョン不一致: mise.toml=${MISE_BUN}, 実際=${ACTUAL_BUN}"
-          fi
+          # 全箇所 (実体, mise.toml, packageManager, engines.bun) が一致しているか
+          for PAIR in "mise.toml=${MISE_BUN}" "packageManager=${PKG_MANAGER}" "engines.bun=${ENGINES_BUN}"; do
+            NAME="${PAIR%%=*}"
+            VAL="${PAIR#*=}"
+            if [ -n "$VAL" ] && [ "$VAL" != "$ACTUAL_BUN" ]; then
+              REPORT="${REPORT}\n⚠️ bun バージョン不一致: ${NAME}=${VAL}, 実際=${ACTUAL_BUN}"
+            fi
+          done
 
           if [ -n "$LATEST_BUN" ] && [ "$ACTUAL_BUN" != "$LATEST_BUN" ]; then
             REPORT="${REPORT}\n📦 bun アップデート: v${ACTUAL_BUN} → v${LATEST_BUN}"
