@@ -3,11 +3,11 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'img.atcoder.jp',
+        protocol: "https",
+        hostname: "img.atcoder.jp",
       },
-    ]
+    ],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

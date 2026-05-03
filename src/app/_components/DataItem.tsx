@@ -1,15 +1,15 @@
-import styles from '@/app/_components/DataItem.module.css'
-import Image from 'next/image'
+import Image from "next/image";
+import styles from "@/app/_components/DataItem.module.css";
 
 type Props = {
-  title: string
-  image: string
-  url: string
-}
+  title: string;
+  image: string;
+  url: string;
+};
 
 const OGPCard = ({ title, image, url }: Props) => {
   return (
-    <a className={styles.ogpLink} href={url} target='_blank'>
+    <a className={styles.ogpLink} href={url} target="_blank" rel="noopener">
       <Image
         className={styles.ogpImage}
         priority={true}
@@ -23,7 +23,7 @@ const OGPCard = ({ title, image, url }: Props) => {
         <p className={styles.ogpUrl}>{url}</p>
       </div>
     </a>
-  )
-}
+  );
+};
 
-export default OGPCard
+export default OGPCard;
