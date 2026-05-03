@@ -21,16 +21,16 @@
     "@react-icons/all-files": "4.1.0",
     "lottie-react": "2.4.1",
     "next": "16.2.4",
-    "react": "19.1.6",
-    "react-dom": "19.1.6",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "rison": "0.1.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.14",
-    "@types/node": "22.18.13",
-    "@types/react": "19.1.17",
-    "@types/react-dom": "19.1.11",
-    "@types/rison": "0.0.9",
+    "@types/node": "22.19.17",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/rison": "0.1.0",
     "typescript": "5.9.3"
   }
 }
