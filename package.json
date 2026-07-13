@@ -20,13 +20,13 @@
   "dependencies": {
     "@react-icons/all-files": "4.1.0",
     "lottie-react": "2.4.1",
-    "next": "16.2.9",
+    "next": "16.2.10",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "rison": "0.1.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.1",
+    "@biomejs/biome": "2.5.2",
     "@types/node": "25.9.4",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
