@@ -20,13 +20,13 @@
   "dependencies": {
     "@react-icons/all-files": "4.1.0",
     "lottie-react": "2.4.1",
-    "next": "16.2.10",
+    "next": "16.2.12",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "rison": "0.1.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.3",
+    "@biomejs/biome": "2.5.4",
     "@types/node": "26.1.1",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
@@ -34,7 +34,8 @@
     "typescript": "6.0.3"
   },
   "overrides": {
-    "postcss": "8.5.10",
-    "nanoid": "3.3.8"
+    "postcss": "8.5.23",
+    "nanoid": "3.3.8",
+    "sharp": "0.35.3"
   }
 }
